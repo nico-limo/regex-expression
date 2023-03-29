@@ -104,6 +104,47 @@ const matchAll = (myString) => {
   return myRegex.test(myString)
 }
 
+// The W will negate w and match all the negatives, include spaces like " "
+const negateMatchAlphaNumeric = (myString) => {
+  const myRegex = /\W/g
+  return myString.match(myRegex)
+}
+
+// the \d is same like [0-9]
+const matchAllNumbers = (myString, isGlobal) => {
+  let myRegex = /\d/
+  if (isGlobal) {
+    myRegex = /\d/g
+  }
+  return myString.match(myRegex)
+}
+// the \D is same like [^0-9]
+const negateMatchAllNumbers = (myString, isGlobal) => {
+  let myRegex = /\D/
+  if (isGlobal) {
+    myRegex = /\D/g
+  }
+  return myString.match(myRegex)
+}
+
+const restricUsername = (myString) => {
+  // ^ start of the input
+  // [a-z][a-z] first two characters need to be string
+  // + could have more strings consecutive
+  // /d* could have zero or more numbers
+  // $ how need to end
+  // | need to be OR
+  //  ^[a-z]\d\d$ this mean that start with a letter and continue with two numbers.
+  let userCheck = /^[a-z][a-z]+\d*$|^[a-z]\d\d$/i
+  return myString.match(userCheck)
+}
+
+// the \s will match all the white spaces
+const whiteSpaceMatch = (myString) => {
+  const myRegex = /\s/g
+  return myString.match(myRegex)
+}
+
 module.exports = {
   ignoreCase,
   match,
@@ -119,7 +160,12 @@ module.exports = {
   findCriminal,
   callFirstMatch,
   callLasttMatch,
-  matchAll
+  matchAll,
+  negateMatchAlphaNumeric,
+  matchAllNumbers,
+  negateMatchAllNumbers,
+  restricUsername,
+  whiteSpaceMatch
 }
 
 // i = IgnoreCase
@@ -131,3 +177,4 @@ module.exports = {
 // + = consecutive
 // * = zero or more
 // ? = is a lazy way to find a match in a spec
+// | == is a OR statments

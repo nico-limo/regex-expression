@@ -13,7 +13,12 @@ const {
   findCriminal,
   callFirstMatch,
   callLasttMatch,
-  matchAll
+  matchAll,
+  negateMatchAlphaNumeric,
+  matchAllNumbers,
+  negateMatchAllNumbers,
+  restricUsername,
+  whiteSpaceMatch
 } = require('./index')
 const { describe, expect, test } = require('@jest/globals')
 
@@ -211,5 +216,117 @@ describe('Function matchAll', () => {
   })
   test('Should not find one and return False', () => {
     expect(matchAll(string_underscore)).toBeTruthy()
+  })
+})
+
+describe('Function negateMatchAlphaNumeric', () => {
+  const strings = 'Luke'
+  const numbers = '17'
+  const notString = '@'
+  const exampleSpace = 'Never say Never'
+  const example = 'myemail@email.com'
+
+  test('Should not find match on a string', () => {
+    expect(negateMatchAlphaNumeric(strings)).toBeNull()
+  })
+  test('Should not find match on a number', () => {
+    expect(negateMatchAlphaNumeric(numbers)).toBeNull()
+  })
+  test('Should find @', () => {
+    expect(negateMatchAlphaNumeric(notString)).toContain('@')
+  })
+  test('Should find the spaces', () => {
+    expect(negateMatchAlphaNumeric(exampleSpace)).toContain(' ')
+  })
+  test('Should not find one and return False', () => {
+    expect(negateMatchAlphaNumeric(example)).toContain('@', '.')
+  })
+})
+
+describe('Function matchAllNumbers', () => {
+  const isGlobal = true
+  const example = '2001: A Space Odyssey'
+  const example2 = 'Not numbers here!'
+
+  test('Should be an array with the exact values', () => {
+    expect(matchAllNumbers(example, isGlobal)).toEqual(
+      expect.arrayContaining(['2', '0', '0', '1'])
+    )
+  })
+  test('Should be an array with the exact values', () => {
+    expect(matchAllNumbers(example)).toEqual(expect.arrayContaining(['2']))
+  })
+  test('Should return null because there is no numbers', () => {
+    expect(matchAllNumbers(example2)).toBeNull()
+  })
+})
+
+describe('Function negateMatchAllNumbers', () => {
+  const isGlobal = true
+  const example = '2001: A Space Odyssey'
+
+  test('Should not include any number and have a lenght of 17', () => {
+    expect(negateMatchAllNumbers(example, isGlobal)).not.toEqual(
+      expect.arrayContaining(['2', '0', '0', '1'])
+    )
+    expect(negateMatchAllNumbers(example, isGlobal)).toHaveLength(17)
+  })
+  test('Should find the symbol ":"', () => {
+    expect(negateMatchAllNumbers(example)).toEqual(
+      expect.arrayContaining([':'])
+    )
+  })
+})
+
+describe('Function restricUsername', () => {
+  test('Your regex should match the string JACK', () => {
+    expect(restricUsername('JACK')).toContain('JACK')
+  })
+  test('Your regex should not match the string J', () => {
+    expect(restricUsername('J')).toBeNull()
+  })
+  test('Your regex should match the string Jo', () => {
+    expect(restricUsername('Jo')).toContain('Jo')
+  })
+  test('Your regex should match the string Oceans11', () => {
+    expect(restricUsername('Oceans11')).toContain('Oceans11')
+  })
+  test('Your regex should match the string RegexGuru', () => {
+    expect(restricUsername('RegexGuru')).toContain('RegexGuru')
+  })
+  test('Your regex should not match the string 007', () => {
+    expect(restricUsername('007')).toBeNull()
+  })
+  test('Your regex should not match the string 9', () => {
+    expect(restricUsername('9')).toBeNull()
+  })
+  test('Your regex should not match the string A1', () => {
+    expect(restricUsername('A1')).toBeNull()
+  })
+  test('Your regex should not match the string BadUs3rnam3', () => {
+    expect(restricUsername('BadUs3rnam3')).toBeNull()
+  })
+  test('Your regex should match the string Z97', () => {
+    expect(restricUsername('Z97')).toContain('Z97')
+  })
+  test('Your regex should not match the string c57bT3', () => {
+    expect(restricUsername('c57bT3')).toBeNull()
+  })
+  test('Your regex should match the string AB1', () => {
+    expect(restricUsername('AB1')).toContain('AB1')
+  })
+  test('Your regex should not match the string J%4', () => {
+    expect(restricUsername('J%4')).toBeNull()
+  })
+})
+
+describe('Function whiteSpaceMatch', () => {
+  const sample = 'Whitespace is important in separating words'
+
+  test('Should find 5 spaces', () => {
+    expect(whiteSpaceMatch(sample)).toHaveLength(5)
+    expect(whiteSpaceMatch(sample)).toEqual(
+      expect.arrayContaining([' ', ' ', ' ', ' ', ' '])
+    )
   })
 })
